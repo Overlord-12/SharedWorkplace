@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using DataBase;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,7 @@ namespace SharedWorkplace.Controllers
                 {
                     // добавляем пользователя в бд
                     user = new User { Id = id + 1, Login = model.Email, Password = model.Password, Name = model.Name };
-                    Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Role1 == "user");
+                    Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "user");
                     if (userRole != null)
                         user.Role = userRole;
 
@@ -81,7 +82,7 @@ namespace SharedWorkplace.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Role1)
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.RoleName)
             };
             // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,

@@ -1,3 +1,4 @@
+using DataBase;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,8 +30,7 @@ namespace SharedWorkplace
             services.AddControllersWithViews();
             services.AddRazorPages()
             .AddRazorRuntimeCompilation();
-            string connection = "Server=localhost;Database=Board;Trusted_Connection=True;";
-            services.AddDbContext<BoardContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<BoardContext>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
