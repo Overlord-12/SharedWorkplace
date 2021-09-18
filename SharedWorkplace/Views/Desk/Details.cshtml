@@ -1,22 +1,22 @@
-﻿@model IEnumerable<SharedWorkplace.Models.Device>
+﻿@model ICollection<SharedWorkplace.Models.Device>
 
 @{
     ViewData["Title"] = "DeviceList";
 }
-<h1>DeskList</h1>
-@*@if (User.IsInRole("admin"))
+<h1>DeviceList</h1>
+@if (User.IsInRole("admin"))
     {
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-    }*@
+        <p>
+            <a asp-action="Add">Add New</a>
+        </p>
+    }
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DeviceName)
+                DeviceName
             </th>
-            <th></th>
+            <th>Command</th>
         </tr>
     </thead>
     <tbody>
@@ -27,9 +27,11 @@
                     @Html.DisplayFor(modelItem => item.DeviceName)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.DeviceName">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
                 </td>
             </tr>
         }

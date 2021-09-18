@@ -7,7 +7,10 @@
 @if (User.IsInRole("admin"))
 {
     <p>
-        <a asp-action="Create" asp-me>Create New</a>
+        <a asp-action="CreateDesk" asp-me>Create New Desk</a>
+    </p>
+    <p>
+        <a asp-action="CreateDevice" asp-me>Create New Device</a>
     </p>
 }
 <table class="table">
@@ -16,16 +19,24 @@
             <th>
                 @Html.DisplayNameFor(model => model.DeskName)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Devices)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.DeskName)
+                </td>
+                <td>
+                    @foreach (var mod in item.Devices)
+                    {
+                        <p>@Html.DisplayFor(modelItem => mod.DeviceName)</p>
+                    }
                 </td>
                 <td>
 

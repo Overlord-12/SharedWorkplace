@@ -20,39 +20,59 @@ namespace SharedWorkplace.Controllers
 
         public IActionResult UserDesk()
         {
-            return View(_context.Desks.OrderBy(t => t.Id));
+            return View(_context.Desks.OrderBy(t => t.Id).Include(t => t.Devices));
         }
         [Authorize(Roles = "user, admin")]
         public IActionResult Details(int id)
         {
-            return View(_context.Desks.FirstOrDefault(i => i.Id == id).Devices);
+            var c = _context.Desks.FirstOrDefault(t => t.Id == id).Devices;
+            return View(_context.Desks.Include(i => i.Devices).FirstOrDefault(t => t.Id == id).Devices);
+        }
+        [HttpGet]
+        [Authorize(Roles = "admin")]
+        public IActionResult CreateDesk()
+        {
+            ViewBag.Devices = _context.Devices;
+            return View();
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> CreateDesk(Desk table,int[] selectedItems)
+        {
+            if (table.DeskName == null) throw new Exception("Вы пытаетесь создать пустой стол");
+            var devices = await _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToListAsync();
+            var desk = new Desk
+            {
+                DeskName = table.DeskName,
+                Devices = devices
+            };
+             _context.Desks.Add(desk);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("UserDesk", "Desk"); ;
+        }
+        [HttpGet]
+        [Authorize(Roles = "admin")]
+        public IActionResult CreateDevice()
+        {
+            return View();
         }
         [Authorize(Roles = "admin")]
         [HttpPost]
-        //public async Task<IActionResult> Create(CreateDesk table)
-        //{
-        //        int check = await _context.Desks.MaxAsync(u => u.Id);
-        //        Desk desk = new Desk { Id = check + 1, TableId = Convert.ToString(table.DeskId), NameTable = table.NameDesk,DeviceId = table.DeviceId };
-        //        _context.Desks.Add(desk);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction("UserDesk", "Desk"); ;
-        //}
-        [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> CreateDevice(Device name)
         {
-            ViewBag.Device = _context.Devices.Select(t => t.Desks).ToList();
-            return View();
-        }
-        //[HttpPost]
-        //public async Task<IActionResult> Create(Desk table)
-        //{
-        //    int check = await _context.Users.MaxAsync(u => u.Id);
-        //    Desk desk= new Desk {Id = check+1, TableId = table.TableId, NameTable = table.NameTable,DeviceId =1};
-        //    _context.Desks.Add(desk);
-        //    await _context.SaveChangesAsync();
+            //if (_context.Devices.Find() throw new Exception("Вы пытаетесь создать пустой стол");
+            var desk = new Device
+            {
+                DeviceName = name.DeviceName
+            };
+            _context.Devices.Add(desk);
+            await _context.SaveChangesAsync();
 
-        //    return RedirectToAction("UserDesk", "Desk");;
-        //}
+            return RedirectToAction("UserDesk", "Desk"); ;
+        }
+
 
     }
 }
