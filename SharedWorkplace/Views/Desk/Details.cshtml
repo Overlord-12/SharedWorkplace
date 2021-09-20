@@ -1,39 +1,39 @@
-﻿@model ICollection<SharedWorkplace.Models.Device>
+﻿@model SharedWorkplace.Models.Desk
 
 @{
-    ViewData["Title"] = "DeviceList";
+    ViewData["Title"] = "Details";
 }
-<h1>DeviceList</h1>
-@if (User.IsInRole("admin"))
-    {
-        <p>
-            <a asp-action="Add">Add New</a>
-        </p>
-    }
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                DeviceName
-            </th>
-            <th>Command</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+
+<h1>Details</h1>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.DeskName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Devices)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DeviceName)
+                    @Html.DisplayFor(model => model.DeskName)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.DeviceName">Details</a> |
-                    @if (User.IsInRole("admin"))
+                    @foreach (var dev in Model.Devices)
                     {
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <pr>@dev.DeviceName</pr>
                     }
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="UserDesk">Back to List</a>
+</div>

@@ -18,6 +18,7 @@ namespace SharedWorkplace.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "user, admin")]
         public IActionResult UserDesk()
         {
             return View(_context.Desks.OrderBy(t => t.Id).Include(t => t.Devices));
@@ -25,8 +26,7 @@ namespace SharedWorkplace.Controllers
         [Authorize(Roles = "user, admin")]
         public IActionResult Details(int id)
         {
-            var c = _context.Desks.FirstOrDefault(t => t.Id == id).Devices;
-            return View(_context.Desks.Include(i => i.Devices).FirstOrDefault(t => t.Id == id).Devices);
+            return View(_context.Desks.Include(i => i.Devices).FirstOrDefault(t => t.Id == id));
         }
         [HttpGet]
         [Authorize(Roles = "admin")]
@@ -73,6 +73,34 @@ namespace SharedWorkplace.Controllers
             return RedirectToAction("UserDesk", "Desk"); ;
         }
 
-
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public IActionResult DeleteDesk(int id)
+        {
+            Desk desk = _context.Desks.FirstOrDefault(t => t.Id == id);
+            _context.Desks.Remove(desk);
+            _context.SaveChanges();
+            return RedirectToAction("UserDesk","Desk");
+        }
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public IActionResult EditDesk(int id)
+        {
+            ViewBag.Devices = _context.Devices;
+            return View(_context.Desks.Include(t=>t.Devices).FirstOrDefault(t=>t.Id == id));
+        }
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<ActionResult> EditDesk(Desk desk, int[] selectedItems)
+        {
+            List<Device> devices = await _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToListAsync();
+            for (int i = 0; i < devices.Count; i++)
+            {
+                if(desk.Devices.FirstOrDefault(t=>t.Id == devices[i].Id) == null) desk.Devices.Add(devices[i]);
+            }
+            _context.Desks.Update(desk);
+            _context.SaveChanges();
+            return RedirectToAction("UserDesk", "Desk");
+        }
     }
 }

@@ -1,33 +1,35 @@
 ﻿@model SharedWorkplace.Models.Desk
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "EditDesk";
 }
 
-<h1>Create</h1>
+<h1>EditDesk</h1>
 
 <h4>Desk</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateDesk">
+        <form asp-action="EditDesk">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="DeskName" class="control-label"></label>
                 <input asp-for="DeskName" class="form-control" />
-                <h3>Devices </h3>
+                <span asp-validation-for="DeskName" class="text-danger"></span>
+            </div>
+            <div>
                 @foreach (var device in ViewBag.Devices)
                 {
-                    
-                    <label asp-action asp-for="Devices" class="control-label">
+                    <label asp-for="Devices" class="control-label">
                         @device.DeviceName
                         <input name="selectedItems" value="@device.Id" type="checkbox" />
                     </label>
+
                 }
-                <span asp-validation-for="DeskName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
