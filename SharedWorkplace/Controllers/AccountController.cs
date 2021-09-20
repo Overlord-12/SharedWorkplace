@@ -35,7 +35,7 @@ namespace SharedWorkplace.Controllers
                 if (user == null)
                 {
                     // добавляем пользователя в бд
-                    user = new User { Id = id + 1, Login = model.Email, Password = model.Password, Name = model.Name };
+                    user = new User {Login = model.Email, Password = model.Password, Name = model.Name };
                     Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "user");
                     if (userRole != null)
                         user.Role = userRole;
@@ -63,9 +63,10 @@ namespace SharedWorkplace.Controllers
         {
             if (ModelState.IsValid)
             {
+                var password = _context.Users.FirstOrDefault(t => t.Login == model.Email).Password;
                 User user = await _context.Users
                     .Include(u => u.Role)
-                    .FirstOrDefaultAsync(u => u.Login == model.Email && u.Password == model.Password);
+                    .FirstOrDefaultAsync(u => u.Login == model.Email && password == model.Password);
                 if (user != null)
                 {
                     await Authenticate(user); // аутентификация

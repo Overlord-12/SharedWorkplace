@@ -26,8 +26,7 @@ namespace SharedWorkplace.Controllers
         [Authorize(Roles = "user, admin")]
         public IActionResult Details(int id)
         {
-            var c = _context.Desks.FirstOrDefault(t => t.Id == id).Devices;
-            return View(_context.Desks.Include(i => i.Devices).FirstOrDefault(t => t.Id == id).Devices);
+            return View(_context.Desks.Include(i => i.Devices).FirstOrDefault(t => t.Id == id));
         }
         [HttpGet]
         [Authorize(Roles = "admin")]
