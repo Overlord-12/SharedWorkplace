@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedWorkplace.Models;
+using SharedWorkplace.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,9 @@ namespace SharedWorkplace
             services.AddRazorPages()
             .AddRazorRuntimeCompilation();
             services.AddDbContext<BoardContext>();
+            services.AddScoped<IUserRepository,UserRepository>();
+            services.AddScoped<IDeskRepository, DeskRepository>();
+            services.AddScoped<IDeviceRepository, DeviceRepository>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {

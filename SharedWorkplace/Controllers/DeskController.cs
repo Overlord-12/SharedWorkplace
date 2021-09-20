@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedWorkplace.Models;
+using SharedWorkplace.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,44 +13,46 @@ namespace SharedWorkplace.Controllers
 {
     public class DeskController : Controller
     {
-        private BoardContext _context;
-        public DeskController(BoardContext context)
+        private IDeskRepository _deskRepository;
+        private IDeviceRepository _deviceRepository;
+        public DeskController(IDeskRepository repository, IDeviceRepository deviceRepository)
         {
-            _context = context;
+            _deskRepository = repository;
+            _deviceRepository = deviceRepository;
         }
 
         [Authorize(Roles = "user, admin")]
         public IActionResult UserDesk()
         {
-            return View(_context.Desks.OrderBy(t => t.Id).Include(t => t.Devices));
+            return View(_deskRepository.GetAllDesk());
         }
         [Authorize(Roles = "user, admin")]
         public IActionResult Details(int id)
         {
-            return View(_context.Desks.Include(i => i.Devices).FirstOrDefault(t => t.Id == id));
+            return View(_deskRepository.Details(id));
         }
         [HttpGet]
         [Authorize(Roles = "admin")]
         public IActionResult CreateDesk()
         {
-            ViewBag.Devices = _context.Devices;
+            ViewBag.Devices = _deviceRepository.GetAll();
             return View();
         }
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateDesk(Desk table,int[] selectedItems)
+        public  IActionResult CreateDesk(Desk table,int[] selectedItems)
         {
-            if (table.DeskName == null) throw new Exception("Вы пытаетесь создать пустой стол");
-            var devices = await _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToListAsync();
-            var desk = new Desk
-            {
-                DeskName = table.DeskName,
-                Devices = devices
-            };
-             _context.Desks.Add(desk);
-            await _context.SaveChangesAsync();
-
+            //if (table.DeskName == null) throw new Exception("Вы пытаетесь создать пустой стол");
+            //var devices = await _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToListAsync();
+            //var desk = new Desk
+            //{
+            //    DeskName = table.DeskName,
+            //    Devices = devices
+            //};
+            // _context.Desks.Add(desk);
+            //await _context.SaveChangesAsync();
+            _deskRepository.CreateDesk(table, selectedItems);
             return RedirectToAction("UserDesk", "Desk"); ;
         }
         [HttpGet]
@@ -60,16 +63,16 @@ namespace SharedWorkplace.Controllers
         }
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateDevice(Device name)
+        public IActionResult CreateDevice(Device name)
         {
             //if (_context.Devices.Find() throw new Exception("Вы пытаетесь создать пустой стол");
-            var desk = new Device
-            {
-                DeviceName = name.DeviceName
-            };
-            _context.Devices.Add(desk);
-            await _context.SaveChangesAsync();
-
+            //var desk = new Device
+            //{
+            //    DeviceName = name.DeviceName
+            //};
+            //_context.Devices.Add(desk);
+            //await _context.SaveChangesAsync();
+            _deviceRepository.CreateDevice(name);
             return RedirectToAction("UserDesk", "Desk"); ;
         }
 
@@ -77,29 +80,31 @@ namespace SharedWorkplace.Controllers
         [HttpGet]
         public IActionResult DeleteDesk(int id)
         {
-            Desk desk = _context.Desks.FirstOrDefault(t => t.Id == id);
-            _context.Desks.Remove(desk);
-            _context.SaveChanges();
+            //Desk desk = _context.Desks.FirstOrDefault(t => t.Id == id);
+            //_context.Desks.Remove(desk);
+            //_context.SaveChanges();
+            _deskRepository.DeleteDesk(id);
             return RedirectToAction("UserDesk","Desk");
         }
         [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult EditDesk(int id)
         {
-            ViewBag.Devices = _context.Devices;
-            return View(_context.Desks.Include(t=>t.Devices).FirstOrDefault(t=>t.Id == id));
+            ViewBag.Devices = _deviceRepository.GetAll();
+            return View(_deskRepository.Details(id));
         }
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<ActionResult> EditDesk(Desk desk, int[] selectedItems)
+        public  ActionResult EditDesk(Desk desk, int[] selectedItems)
         {
-            List<Device> devices = await _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToListAsync();
-            for (int i = 0; i < devices.Count; i++)
-            {
-                if(desk.Devices.FirstOrDefault(t=>t.Id == devices[i].Id) == null) desk.Devices.Add(devices[i]);
-            }
-            _context.Desks.Update(desk);
-            _context.SaveChanges();
+            //List<Device> devices = await _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToListAsync();
+            //for (int i = 0; i < devices.Count; i++)
+            //{
+            //    if(desk.Devices.FirstOrDefault(t=>t.Id == devices[i].Id) == null) desk.Devices.Add(devices[i]);
+            //}
+            //_context.Desks.Update(desk);
+            //_context.SaveChanges();
+            _deskRepository.EditDesk(desk, selectedItems);
             return RedirectToAction("UserDesk", "Desk");
         }
     }

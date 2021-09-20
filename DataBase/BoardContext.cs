@@ -6,14 +6,6 @@ namespace DataBase
 {
     public class BoardContext: DbContext
     {
-        //public BoardContext()
-        //{
-        //}
-
-        //public BoardContext(DbContextOptions<BoardContext> options)
-        //    : base(options)
-        //{
-        //}
 
         public virtual DbSet<Desk> Desks { get; set; }
         public virtual DbSet<Device> Devices { get; set; }

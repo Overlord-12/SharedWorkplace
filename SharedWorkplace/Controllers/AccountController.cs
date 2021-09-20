@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedWorkplace.Models;
+using SharedWorkplace.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,10 @@ namespace SharedWorkplace.Controllers
 {
     public class AccountController : Controller
     {
-        private BoardContext _context;
-        public AccountController(BoardContext context)
+        private readonly IUserRepository _userRepository;
+        public AccountController(IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
         [HttpGet]
         public IActionResult Register()
@@ -29,19 +30,18 @@ namespace SharedWorkplace.Controllers
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)
-            {
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Email);
-                int id = await _context.Users.MaxAsync(u => u.Id);
+            {/*await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Email);*/
+                User user = _userRepository.FindUser(model.Email);
                 if (user == null)
                 {
-                    // добавляем пользователя в бд
-                    user = new User {Login = model.Email, Password = model.Password, Name = model.Name };
-                    Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "user");
-                    if (userRole != null)
-                        user.Role = userRole;
-
-                    _context.Users.Add(user);
-                    await _context.SaveChangesAsync();
+                    user = _userRepository.AddAsync(model);
+                    //// добавляем пользователя в бд
+                    //user = new User {Login = model.Email, Password = model.Password, Name = model.Name };
+                    //Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "user");
+                    //if (userRole != null)
+                    //    user.Role = userRole;
+                    //_context.Users.Add(user);
+                    //await _context.SaveChangesAsync();
 
                     await Authenticate(user); // аутентификация
 
@@ -63,10 +63,7 @@ namespace SharedWorkplace.Controllers
         {
             if (ModelState.IsValid)
             {
-                var password = _context.Users.FirstOrDefault(t => t.Login == model.Email).Password;
-                User user = await _context.Users
-                    .Include(u => u.Role)
-                    .FirstOrDefaultAsync(u => u.Login == model.Email && password == model.Password);
+                User user = _userRepository.LoginAsync(model);
                 if (user != null)
                 {
                     await Authenticate(user); // аутентификация
