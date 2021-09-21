@@ -25,6 +25,13 @@ namespace SharedWorkplace.Models.Repository
             _context.SaveChangesAsync();
         }
 
+        public void DeleteDevice(int id)
+        {
+            var dev = _context.Devices.FirstOrDefault(t => t.Id == id);
+            _context.Devices.Remove(dev);
+            _context.SaveChanges();
+        }
+
         public IEnumerable<Device> GetAll()
         {
             return _context.Devices;

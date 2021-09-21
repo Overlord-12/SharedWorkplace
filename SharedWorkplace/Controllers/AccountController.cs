@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedWorkplace.Models;
 using SharedWorkplace.Models.Repository;
+using SharedWorkplace.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,10 @@ namespace SharedWorkplace.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserRepository _userRepository;
-        public AccountController(IUserRepository userRepository)
+        private readonly IUserService _userService;
+        public AccountController(IUserService userService)
         {
-            _userRepository = userRepository;
+            _userService = userService;
         }
         [HttpGet]
         public IActionResult Register()
@@ -30,21 +31,12 @@ namespace SharedWorkplace.Controllers
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)
-            {/*await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Email);*/
-                User user = _userRepository.FindUser(model.Email);
+            {
+                User user = _userService.FindUser(model.Email);
                 if (user == null)
                 {
-                    user = _userRepository.AddAsync(model);
-                    //// добавляем пользователя в бд
-                    //user = new User {Login = model.Email, Password = model.Password, Name = model.Name };
-                    //Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "user");
-                    //if (userRole != null)
-                    //    user.Role = userRole;
-                    //_context.Users.Add(user);
-                    //await _context.SaveChangesAsync();
-
+                    user = _userService.AddAsync(model);
                     await Authenticate(user); // аутентификация
-
                     return RedirectToAction("Login", "Account");
                 }
                 else
@@ -63,7 +55,7 @@ namespace SharedWorkplace.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = _userRepository.LoginAsync(model);
+                User user = _userService.LoginAsync(model);
                 if (user != null)
                 {
                     await Authenticate(user); // аутентификация

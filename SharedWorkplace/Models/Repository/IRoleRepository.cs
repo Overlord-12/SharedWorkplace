@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace SharedWorkplace.Models.Repository
 {
-   public interface IDeviceRepository
+    public interface IRoleRepository
     {
-        IEnumerable<Device> GetAll();
-        void CreateDevice(Device name);
-        void DeleteDevice(int id);
+        public IEnumerable<Role> GetAllRole();
     }
 }

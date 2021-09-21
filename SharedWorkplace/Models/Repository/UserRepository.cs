@@ -1,5 +1,6 @@
 ﻿using DataBase;
 using Microsoft.EntityFrameworkCore;
+using SharedWorkplace.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +11,18 @@ namespace SharedWorkplace.Models.Repository
     public class UserRepository : IUserRepository
     {
         private BoardContext _context;
-        public UserRepository(BoardContext board)
+        private IRoleService _roleService;
+        public UserRepository(BoardContext board, IRoleService role)
         {
             _context = board;
+            _roleService = role;
         }
         public  User AddAsync(RegisterModel model)
         {
             User user = _context.Users.FirstOrDefault(u => u.Login == model.Email);
                 // добавляем пользователя в бд
                 user = new User { Login = model.Email, Password = model.Password, Name = model.Name };
-                Role userRole =  _context.Roles.FirstOrDefault(r => r.RoleName == "user");
+                Role userRole = _roleService.GetRole(1);
                 if (userRole != null)
                     user.Role = userRole;
                 _context.Users.Add(user);

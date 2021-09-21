@@ -1,14 +1,15 @@
-﻿using System;
+﻿using SharedWorkplace.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SharedWorkplace.Models.Repository
+namespace SharedWorkplace.Service
 {
-   public interface IDeviceRepository
+    public interface IDeviceService
     {
         IEnumerable<Device> GetAll();
         void CreateDevice(Device name);
-        void DeleteDevice(int id);
+        public void DeleteService(int id);
     }
 }

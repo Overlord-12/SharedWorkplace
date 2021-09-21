@@ -14,17 +14,26 @@ namespace SharedWorkplace.Models.Repository
         {
             _context = board;
         }
-        public void CreateDesk(Desk table, int[] selectedItems)
+        public async Task<bool> CreateDesk(Desk table, int[] selectedItems)
         {
-            if (table.DeskName == null) throw new Exception("Вы пытаетесь создать пустой стол");
-            var devices =  _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToList();
-            var desk = new Desk
+            try
             {
-                DeskName = table.DeskName,
-                Devices = devices
-            };
-            _context.Desks.Add(desk);
-             _context.SaveChangesAsync();
+                if (table.DeskName == null) throw new Exception("Вы пытаетесь создать пустой стол");
+                var devices = _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToList();
+                var desk = new Desk
+                {
+                    DeskName = table.DeskName,
+                    Devices = devices
+                };
+                _context.Desks.Add(desk);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
 
         public void DeleteDesk(int id)
@@ -39,10 +48,10 @@ namespace SharedWorkplace.Models.Repository
             return _context.Desks.Include(i => i.Devices).FirstOrDefault(t => t.Id == id);
         }
 
-        public async void EditDesk(Desk desk, int[] selectedItems)
+        public void EditDesk(Desk desk, int[] selectedItems)
         {
 
-            List<Device> devices = await _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToListAsync();
+            List<Device> devices = _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToList();
             for (int i = 0; i < devices.Count; i++)
             {
                 if (desk.Devices.FirstOrDefault(t => t.Id == devices[i].Id) == null) desk.Devices.Add(devices[i]);
