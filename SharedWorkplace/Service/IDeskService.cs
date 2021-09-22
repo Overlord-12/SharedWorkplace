@@ -11,9 +11,9 @@ namespace SharedWorkplace.Service
         void CreateDesk(Desk table, int[] selectedItems);
         IEnumerable<Desk> GetAllDesk();
         void DeleteDesk(int id);
-
-        void EditDesk(Desk desk, int[] selectedItems);
-
+        void EditDesk(Desk desk);
+        Desk DeleteDevice(int desk, int deviceId);
         Desk Details(int id);
+        void AddDevice(Desk desk, int id);
     }
 }

@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditDesk">
+        <form asp-action="EditName" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -18,22 +18,41 @@
                 <input asp-for="DeskName" class="form-control" />
                 <span asp-validation-for="DeskName" class="text-danger"></span>
             </div>
-            <div>
-                @foreach (var device in ViewBag.Devices)
-                {
-                    <label asp-for="Devices" class="control-label">
-                        @device.DeviceName
-                        <input name="selectedItems" value="@device.Id" type="checkbox" />
-                    </label>
-
-                }
-                <input type="button" name="" onclick="alert('button brut');return false;" value="button" />
-
-            </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
+        <form asp-action="AddDeviceInDesk" method="post">
+            <input type="hidden" asp-for="Id" />
+            @if (ViewBag.Devices.Length != 0)
+            {
+                <div>
+
+                    <select id="device" name="device">
+                        @foreach (var item in ViewBag.Devices)
+                        {
+                            <option value="@item.Id">@item.DeviceName</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top:10px">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            }
+
+        </form>
+        <div style="display:inline-block">
+            @foreach (var item in Model.Devices)
+            {
+                @item.DeviceName
+                <a asp-action="DelDeviceinDesk" asp-route-id="@Model.Id" asp-route-id2="@item.Id">delete</a>
+            }
+        </div>
+        @*<form action="EditDesk" method="get">
+                @Html.DropDownList(t => t.Devices as SelectList, "shoose")
+                <input type="submit" value="TADA" class="btn btn-primary" />
+            </form>*@
+
     </div>
 </div>
 

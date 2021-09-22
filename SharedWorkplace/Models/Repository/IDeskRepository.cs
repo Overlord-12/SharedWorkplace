@@ -11,9 +11,12 @@ namespace SharedWorkplace.Models.Repository
         IEnumerable<Desk> GetAllDesk();
         void DeleteDesk(int id);
 
-        void EditDesk(Desk desk, int[] selectedItems);
+        void EditDesk(Desk desk);
 
         Desk Details(int id);
 
+        Desk DeleteDevice(int deskId, int id);
+
+        void AddDevice(Desk desk, int id);
     }
 }

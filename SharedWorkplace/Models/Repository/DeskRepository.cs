@@ -14,6 +14,15 @@ namespace SharedWorkplace.Models.Repository
         {
             _context = board;
         }
+
+        public void AddDevice(Desk desk, int id)
+        {
+            Desk des = _context.Desks.FirstOrDefault(t=> t.Id == desk.Id);
+            Device device = _context.Devices.FirstOrDefault(t => t.Id == id);
+            des.Devices.Add(device);
+            _context.SaveChanges();
+        }
+
         public async Task<bool> CreateDesk(Desk table, int[] selectedItems)
         {
             try
@@ -43,19 +52,22 @@ namespace SharedWorkplace.Models.Repository
             _context.SaveChanges();
         }
 
+        public Desk DeleteDevice(int deskId, int id)
+        {
+            var c = _context.Devices.FirstOrDefault(i => i.Id == id);
+            var desk = _context.Desks.Include(t=>t.Devices).FirstOrDefault(i => i.Id == deskId);
+            desk.Devices.Remove(c);
+            _context.Desks.Update(desk);
+            _context.SaveChanges();
+            return desk;
+        }
+
         public Desk Details(int id)
         {
             return _context.Desks.Include(i => i.Devices).FirstOrDefault(t => t.Id == id);
         }
-
-        public void EditDesk(Desk desk, int[] selectedItems)
+        public void EditDesk(Desk desk)
         {
-
-            List<Device> devices = _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToList();
-            for (int i = 0; i < devices.Count; i++)
-            {
-                if (desk.Devices.FirstOrDefault(t => t.Id == devices[i].Id) == null) desk.Devices.Add(devices[i]);
-            }
             _context.Desks.Update(desk);
             _context.SaveChanges();
         }

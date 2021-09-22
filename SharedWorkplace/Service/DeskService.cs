@@ -19,7 +19,10 @@ namespace SharedWorkplace.Service
         {
             await _deskService.CreateDesk(table,selectedItems);
         }
-
+        public Desk DeleteDevice(int desk, int id)
+        {
+            return _deskService.DeleteDevice(desk, id);
+        }
         public void DeleteDesk(int id)
         {
             _deskService.DeleteDesk(id);
@@ -30,14 +33,19 @@ namespace SharedWorkplace.Service
             return _deskService.Details(id);
         }
 
-        public void EditDesk(Desk desk, int[] selectedItems)
+        public void EditDesk(Desk desk)
         {
-            _deskService.EditDesk(desk, selectedItems);
+            _deskService.EditDesk(desk);
         }
 
         public IEnumerable<Desk> GetAllDesk()
         {
             return _deskService.GetAllDesk();
+        }
+
+        public void AddDevice(Desk desk, int id)
+        {
+             _deskService.AddDevice(desk, id);
         }
     }
 }

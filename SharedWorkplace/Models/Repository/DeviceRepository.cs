@@ -23,6 +23,7 @@ namespace SharedWorkplace.Models.Repository
             };
             _context.Devices.Add(device);
             _context.SaveChangesAsync();
+           
         }
 
         public void DeleteDevice(int id)

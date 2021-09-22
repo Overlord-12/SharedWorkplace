@@ -40,11 +40,20 @@ namespace SharedWorkplace.Models.Repository
         }
         public  User LoginAsync(LoginModel model)
         {
-            var password = _context.Users.FirstOrDefault(t => t.Login == model.Email).Password;
-            User user = _context.Users
-                .Include(u => u.Role)
-                .FirstOrDefault(u => u.Login == model.Email && password == model.Password);
-            return user;
+            try
+            {
+                if (_context.Users.FirstOrDefault(t => t.Login == model.Email) == null) throw new Exception();
+                var password = _context.Users.FirstOrDefault(t => t.Login == model.Email).Password;
+                User user = _context.Users
+                    .Include(u => u.Role)
+                    .FirstOrDefault(u => u.Login == model.Email && password == model.Password);
+                return user;
+            }
+            catch(Exception)
+            {
+                throw new Exception();
+            }
+         
         }
     }
 }

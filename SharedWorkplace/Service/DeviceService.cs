@@ -26,5 +26,6 @@ namespace SharedWorkplace.Service
         {
             return _deviceRepository.GetAll();
         }
+
     }
 }

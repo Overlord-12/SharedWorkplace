@@ -32,15 +32,19 @@ namespace SharedWorkplace.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = _userService.FindUser(model.Email);
-                if (user == null)
+                try
                 {
-                    user = _userService.AddAsync(model);
-                    await Authenticate(user); // аутентификация
-                    return RedirectToAction("Login", "Account");
+                    User user = _userService.FindUser(model.Email);
+                    
+                        user = _userService.AddAsync(model);
+                        await Authenticate(user); // аутентификация
+                        return RedirectToAction("Login", "Account");
+                    
+                }catch(Exception)
+                {
+                    ModelState.AddModelError("Password", "Некорректные логин и(или) пароль");
                 }
-                else
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                 
             }
             return View(model);
         }
@@ -55,14 +59,22 @@ namespace SharedWorkplace.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = _userService.LoginAsync(model);
-                if (user != null)
+                try
                 {
-                    await Authenticate(user); // аутентификация
+                    User user = _userService.LoginAsync(model);
+                    if (user != null)
+                    {
+                        await Authenticate(user); // аутентификация
 
-                    return RedirectToAction("UserDesk", "Desk");
+                        return RedirectToAction("UserDesk", "Desk");
+                    }
                 }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                catch (Exception)
+                {
+
+                    ModelState.AddModelError("Password", "Некорректные логин и(или) пароль");
+                }
+              
             }
             return View(model);
         }

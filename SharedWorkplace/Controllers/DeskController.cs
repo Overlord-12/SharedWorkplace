@@ -30,6 +30,7 @@ namespace SharedWorkplace.Controllers
         [Authorize(Roles = "user, admin")]
         public IActionResult Details(int id)
         {
+            ViewBag.Devices = _deviceService.GetAll();
             return View(_deskService.Details(id));
         }
         [HttpGet]
@@ -78,15 +79,32 @@ namespace SharedWorkplace.Controllers
         [HttpGet]
         public IActionResult EditDesk(int id)
         {
-            ViewBag.Devices = _deviceService.GetAll();
-            return View(_deskService.Details(id));
+            Desk desk = _deskService.Details(id);
+            ViewBag.Devices = _deviceService.GetAll().ToList().Where(d => !desk.Devices.Contains(d)).ToArray();
+            return View(desk);
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public IActionResult DelDeviceinDesk(int id, int id2)
+        {
+            _deskService.DeleteDevice(id, id2);
+            return RedirectToAction("EditDesk", "Desk",new {id = id});
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public IActionResult AddDeviceInDesk(Desk desk, int device)
+        {
+            _deskService.AddDevice(desk, device);
+            return RedirectToAction("EditDesk", "Desk", new { id = desk.Id });
         }
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public  ActionResult EditDesk(Desk desk, int[] selectedItems)
+        public IActionResult EditName(Desk desk)
         {
-            _deskService.EditDesk(desk, selectedItems);
-            return RedirectToAction("UserDesk", "Desk");
+            _deskService.EditDesk(desk);
+            return RedirectToAction("EditDesk", "Desk", new { id = desk.Id });
         }
     }
 }

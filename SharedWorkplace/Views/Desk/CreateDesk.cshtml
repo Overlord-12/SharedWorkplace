@@ -18,11 +18,14 @@
                 <h3>Devices </h3>
                 @foreach (var device in ViewBag.Devices)
                 {
-                    
-                    <label asp-action asp-for="Devices" class="control-label">
-                        @device.DeviceName
-                        <input name="selectedItems" value="@device.Id" type="checkbox" />
-                    </label>
+                    <div>
+                        <label asp-action asp-for="Devices" class="control-label">
+                            @device.DeviceName
+                            <input name="selectedItems" value="@device.Id" type="checkbox" />
+                        </label><br>
+                    </div>
+
+
                 }
                 <span asp-validation-for="DeskName" class="text-danger"></span>
             </div>
