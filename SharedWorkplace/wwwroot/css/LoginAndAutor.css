@@ -7,9 +7,15 @@
     transition: 0.3s;
     width: 200px;
 }
-
+.WarningMessage{
+    color:red;
+}
+.UnderDiv {
+    margin-top: 10px;
+}
 .mainDiv {
-    width: 300px;
+    text-align: center;
+    width: 600px;
     padding: 32px;
     border-radius: 10px;
     box-shadow: 0 4px 16px #ccc;
