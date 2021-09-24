@@ -34,11 +34,15 @@ namespace SharedWorkplace.Controllers
             {
                 try
                 {
-                    User user = _userService.FindUser(model.Email);
-                    
-                        user = _userService.AddAsync(model);
+                    if(_userService.FindUser(model.Email) != null)
+                        ModelState.AddModelError("Login", "Такой пользователь уже существует");
+                    else
+                    {
+                        User user = _userService.AddAsync(model);
                         await Authenticate(user); // аутентификация
                         return RedirectToAction("Login", "Account");
+                    }
+                        
                     
                 }catch(Exception)
                 {
@@ -68,6 +72,8 @@ namespace SharedWorkplace.Controllers
 
                         return RedirectToAction("UserDesk", "Desk");
                     }
+                    else
+                        ModelState.AddModelError("Password", "Некорректные логин и(или) пароль");
                 }
                 catch (Exception)
                 {

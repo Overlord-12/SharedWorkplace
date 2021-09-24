@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBase.Migrations
 {
     [DbContext(typeof(BoardContext))]
-    [Migration("20210917151216_initial")]
+    [Migration("20210923113030_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,31 @@ namespace DataBase.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("DataBase.Entities.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("DeskId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeskId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservations");
+                });
 
             modelBuilder.Entity("DeskDevice", b =>
                 {
@@ -34,6 +59,21 @@ namespace DataBase.Migrations
                     b.HasIndex("DevicesId");
 
                     b.ToTable("DeskDevice");
+                });
+
+            modelBuilder.Entity("DeviceReservation", b =>
+                {
+                    b.Property<int>("DevicesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReservationsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DevicesId", "ReservationsId");
+
+                    b.HasIndex("ReservationsId");
+
+                    b.ToTable("DeviceReservation");
                 });
 
             modelBuilder.Entity("SharedWorkplace.Models.Desk", b =>
@@ -79,6 +119,18 @@ namespace DataBase.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RoleName = "admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            RoleName = "user"
+                        });
                 });
 
             modelBuilder.Entity("SharedWorkplace.Models.User", b =>
@@ -105,6 +157,39 @@ namespace DataBase.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Login = "admin@mail.ru",
+                            Name = "admin@mail.ru",
+                            Password = "123456",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Login = "user.@mail.ru",
+                            Name = "user.@mail.ru",
+                            Password = "123456",
+                            RoleId = 2
+                        });
+                });
+
+            modelBuilder.Entity("DataBase.Entities.Reservation", b =>
+                {
+                    b.HasOne("SharedWorkplace.Models.Desk", "Desk")
+                        .WithMany("Reservations")
+                        .HasForeignKey("DeskId");
+
+                    b.HasOne("SharedWorkplace.Models.User", "User")
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Desk");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DeskDevice", b =>
@@ -122,6 +207,21 @@ namespace DataBase.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DeviceReservation", b =>
+                {
+                    b.HasOne("SharedWorkplace.Models.Device", null)
+                        .WithMany()
+                        .HasForeignKey("DevicesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataBase.Entities.Reservation", null)
+                        .WithMany()
+                        .HasForeignKey("ReservationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SharedWorkplace.Models.User", b =>
                 {
                     b.HasOne("SharedWorkplace.Models.Role", "Role")
@@ -131,9 +231,19 @@ namespace DataBase.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("SharedWorkplace.Models.Desk", b =>
+                {
+                    b.Navigation("Reservations");
+                });
+
             modelBuilder.Entity("SharedWorkplace.Models.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("SharedWorkplace.Models.User", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

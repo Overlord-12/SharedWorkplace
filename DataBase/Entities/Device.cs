@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataBase.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace SharedWorkplace.Models
@@ -10,10 +11,12 @@ namespace SharedWorkplace.Models
         public string DeviceName { get; set; }
 
         public virtual ICollection<Desk> Desks { get; set; }
+        public virtual ICollection<Reservation> Reservations { get; set; }
 
         public Device()
         {
             Desks = new List<Desk>();
+            Reservations = new List<Reservation>();
         }
     }
 }
