@@ -16,12 +16,21 @@ namespace SharedWorkplace.Models.Repository
         {
             _boardContext = boardContext;
         }
-        public Reservation Create(Reservation reservation)
+        public bool Create(Reservation reservation)
         {
-         
-            _boardContext.Reservations.Add(reservation);
-            _boardContext.SaveChanges();
-            return reservation;
+            try
+            {
+                if (_boardContext.Reservations.FirstOrDefault(t => t.User == reservation.User && t.StartTime ==
+             reservation.StartTime) != null)
+                    throw new Exception("Вы не можете занимать 2 места на одно время");
+                _boardContext.Reservations.Add(reservation);
+                _boardContext.SaveChanges();
+                return true;
+            }catch(Exception)
+            {
+                return false;
+            }
+            
         }
 
         public IEnumerable<Reservation> GetAll()

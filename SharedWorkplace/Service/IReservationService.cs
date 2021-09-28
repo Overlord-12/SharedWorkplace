@@ -8,7 +8,7 @@ namespace SharedWorkplace.Service
 {
     public interface IReservationService
     {
-        Reservation Create(Reservation reservation);
+        bool Create(Reservation reservation);
         IEnumerable<Reservation> GetAll();
     }
 }

@@ -20,15 +20,16 @@
                     <p>
                         @item.DeviceName
                         <a asp-action="DeleteDevice" asp-route-id="@item.Id">Delete</a>
-                    </p> 
-                 }
+                    </p>
+                }
             </div>
+            <span asp-validation-for="DeviceName"></span>
             <h1>Create a new Device</h1>
             <hr />
             <div class="form-group">
                 <label asp-for="DeviceName" class="input-text"></label>
                 <input asp-for="DeviceName" class="input" />
-                <span asp-validation-for="DeviceName" class="text-danger"></span>
+                <p>@Model.DeviceName</p>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

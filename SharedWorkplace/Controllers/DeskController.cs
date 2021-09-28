@@ -84,17 +84,20 @@ namespace SharedWorkplace.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public IActionResult CreateDesk(Desk table, int[] selectedItems)
+        public IActionResult CreateDesk(DeskViewModel table, int[] selectedItems)
         {
+            var t = _deskService.GetAllDesk().FirstOrDefault(t => t.DeskName == table.DeskName);
+            if (_deskService.GetAllDesk().FirstOrDefault(t=>t.DeskName == table.DeskName)!= null)
+                ModelState.AddModelError("DeviceName", "Такой девайс уже существует");
             _deskService.CreateDesk(table, selectedItems);
             return RedirectToAction("UserDesk", "Desk"); ;
         }
         [HttpGet]
         [Authorize(Roles = "admin")]
-        public IActionResult CreateDevice()
+        public IActionResult CreateDevice(Device device,int id)
         {
             ViewBag.Devices = _deviceService.GetAll();
-            return View();
+            return View(device);
         }
         public IActionResult DeleteDevice(int id)
         {
@@ -103,10 +106,25 @@ namespace SharedWorkplace.Controllers
         }
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public IActionResult CreateDevice(Device name)
+        public IActionResult CreateDevice(Device dev)
         {
-            _deviceService.CreateDevice(name);
-            return RedirectToAction("CreateDevice", "Desk"); ;
+            try
+            {
+                _deviceService.CreateDevice(dev);
+                return RedirectToAction("CreateDevice", "Desk", new { dev = new Device() });
+            }
+            catch(Exception)
+            {
+                dev.DeviceName = "Такой стол уже существует";
+            }
+            return RedirectToAction("CreateDevice", "Desk", new { t = dev });
+        }
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult CheckDevice(string device)
+        {
+            if (_deviceService.GetAll().FirstOrDefault(t=>t.DeviceName == device) != null)
+                return Json(false);
+            return Json(true);
         }
 
         [Authorize(Roles = "admin")]
@@ -146,6 +164,13 @@ namespace SharedWorkplace.Controllers
         {
             _deskService.EditDesk(desk);
             return RedirectToAction("EditDesk", "Desk", new { id = desk.Id });
+        }
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult CheckDesk(string DeskName)
+        {
+            if (_deskService.GetAllDesk().FirstOrDefault(t => t.DeskName == DeskName) != null)
+                return Json(false);
+            return Json(true);
         }
     }
 }

@@ -6,15 +6,21 @@
 <h1>DeskList</h1>
 @if (User.IsInRole("admin"))
 {
-    <p>
-        <a asp-action="CreateDesk" asp-me>Create New Desk</a>
-    </p>
-    <p>
-        <a asp-action="CreateDevice" asp-me>Details Device</a>
-    </p>
+    <ol class="list-unstyled ">
+        <li class="list-inline-item">
+            <p>
+                <a asp-action="CreateDesk">Create New Desk</a>
+            </p>
+        </li>
+        <li class="list-inline-item">
+            <p>
+                <a asp-action="CreateDevice" class="link-d">Details Device</a>
+            </p>
+        </li>
+    </ol>
 }
 <table class="table">
-    <thead>
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.DeskName)

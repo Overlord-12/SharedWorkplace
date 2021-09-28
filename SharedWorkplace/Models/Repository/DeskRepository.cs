@@ -23,10 +23,11 @@ namespace SharedWorkplace.Models.Repository
             _context.SaveChanges();
         }
 
-        public async Task<bool> CreateDesk(Desk table, int[] selectedItems)
+        public async Task<bool> CreateDesk(DeskViewModel table, int[] selectedItems)
         {
             try
             {
+                if (_context.Desks.FirstOrDefault(t => t.DeskName == table.DeskName) != null) throw new Exception("Такой стол уже существует");
                 if (table.DeskName == null) throw new Exception("Вы пытаетесь создать пустой стол");
                 var devices = _context.Devices.Where(x => selectedItems.Contains(x.Id)).ToList();
                 var desk = new Desk

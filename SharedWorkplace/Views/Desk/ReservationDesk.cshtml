@@ -5,10 +5,6 @@
 }
 
 <h1>ReservationDesk</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -34,7 +30,10 @@
                 @Html.DisplayFor(modelItem => item.StartTime.Date)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Devices)
+                @foreach (var dev in item.Devices)
+                {
+                <p>@Html.DisplayFor(modelItem => dev.DeviceName)</p> 
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User.Login)

@@ -13,17 +13,20 @@ namespace SharedWorkplace.Models.Repository
         {
             _context = board;
         }
-        public void CreateDevice(Device name)
+        public async Task<bool> CreateDevice(Device name)
         {
             if (_context.Devices.FirstOrDefault(t => t.DeviceName == name.DeviceName) != null)
+            {
                 throw new Exception("Такой девайс уже есть");
+                return false;
+            }
             var device = new Device
             {
                 DeviceName = name.DeviceName
             };
             _context.Devices.Add(device);
-            _context.SaveChangesAsync();
-           
+           await _context.SaveChangesAsync();
+            return true;
         }
 
         public void DeleteDevice(int id)

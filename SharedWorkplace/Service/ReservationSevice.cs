@@ -15,7 +15,7 @@ namespace SharedWorkplace.Service
             _reservationRepository = reservationRepository;
         }
 
-        public Reservation Create(Reservation reservation)
+        public bool Create(Reservation reservation)
         {
             return _reservationRepository.Create(reservation);
         }
