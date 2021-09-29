@@ -41,6 +41,8 @@ namespace SharedWorkplace
             services.AddScoped<IDeskService,DeskService>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IReservationService, ReservationSevice>();
+            services.AddScoped<IReservationRepository, ReservationRepository>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {

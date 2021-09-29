@@ -1,42 +1,43 @@
-﻿@model SharedWorkplace.Models.Desk
+﻿@model SharedWorkplace.Models.DeskViewModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Desk</h4>
+<h1>Create Desk</h1>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="" style="margin:0 auto;width:400px;height:300px; position:relative" >
+    <div>
         <form asp-action="CreateDesk">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group" style="float: left; margin: 0 auto;">
                 <label asp-for="DeskName" class="control-label"></label>
                 <input asp-for="DeskName" class="form-control" />
+                <span asp-validation-for="DeskName" style="color:red"></span>
+                <div class="form-group">
+                    <input type="submit" value="Create" style="margin-top:20px" class="btn btn-primary" />
+                </div>
+            </div>
+            <div style="float: right; margin: 0 auto;">
                 <h3>Devices </h3>
                 @foreach (var device in ViewBag.Devices)
                 {
                     <div>
                         <label asp-action asp-for="Devices" class="control-label">
                             @device.DeviceName
-                            <input name="selectedItems" value="@device.Id" type="checkbox" />
+                            <input name="SelectedItems" value="@device.Id" type="checkbox" />
                         </label><br>
                     </div>
-
-
                 }
-                <span asp-validation-for="DeskName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
+   
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
 
 <div>
     <a asp-action="UserDesk">Back to List</a>
 </div>
-

@@ -8,7 +8,7 @@ namespace SharedWorkplace.Service
 {
     public interface IDeskService
     {
-        void CreateDesk(Desk table, int[] selectedItems);
+        void CreateDesk(DeskViewModel table, int[] selectedItems);
         IEnumerable<Desk> GetAllDesk();
         void DeleteDesk(int id);
         void EditDesk(Desk desk);

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DataBase.Entities.Reservation>
+
+@{
+    ViewData["Title"] = "ReservationDesk";
+}
+
+<h1>ReservationDesk</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Devices)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Desk)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @foreach (var dev in item.Devices)
+                {
+                <p>@Html.DisplayFor(modelItem => dev.DeviceName)</p> 
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Login)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Desk.DeskName)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

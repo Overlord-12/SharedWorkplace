@@ -9,7 +9,7 @@ namespace SharedWorkplace.Service
     public interface IDeviceService
     {
         IEnumerable<Device> GetAll();
-        void CreateDevice(Device name);
+        void CreateDevice(DeviceViewModel name);
         public void DeleteService(int id);
     }
 }

@@ -14,7 +14,7 @@ namespace SharedWorkplace.Service
         {
             _deviceRepository = deviceRepository;
         }
-        public void CreateDevice(Device name)
+        public void CreateDevice(DeviceViewModel name)
         {
             _deviceRepository.CreateDevice(name);
         }

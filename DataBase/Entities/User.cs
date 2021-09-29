@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataBase.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace SharedWorkplace.Models
@@ -16,5 +17,10 @@ namespace SharedWorkplace.Models
         public int? RoleId { get; set; }
 
         public Role Role { get; set; }
+        public ICollection<Reservation> Reservations { get; set; }
+        public User()
+        {
+            Reservations = new List<Reservation>();
+        }
     }
 }

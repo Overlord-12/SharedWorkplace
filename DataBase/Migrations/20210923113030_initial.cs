@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataBase.Migrations
 {
@@ -91,10 +92,96 @@ namespace DataBase.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Reservations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StartTime = table.Column<DateTime>(type: "date", nullable: false),
+                    DeskId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Desks_DeskId",
+                        column: x => x.DeskId,
+                        principalTable: "Desks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeviceReservation",
+                columns: table => new
+                {
+                    DevicesId = table.Column<int>(type: "int", nullable: false),
+                    ReservationsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeviceReservation", x => new { x.DevicesId, x.ReservationsId });
+                    table.ForeignKey(
+                        name: "FK_DeviceReservation_Devices_DevicesId",
+                        column: x => x.DevicesId,
+                        principalTable: "Devices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DeviceReservation_Reservations_ReservationsId",
+                        column: x => x.ReservationsId,
+                        principalTable: "Reservations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "RoleName" },
+                values: new object[] { 1, "admin" });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "RoleName" },
+                values: new object[] { 2, "user" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Login", "Name", "Password", "RoleId" },
+                values: new object[] { 1, "admin@mail.ru", "admin@mail.ru", "123456", 1 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Login", "Name", "Password", "RoleId" },
+                values: new object[] { 2, "user.@mail.ru", "user.@mail.ru", "123456", 2 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_DeskDevice_DevicesId",
                 table: "DeskDevice",
                 column: "DevicesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeviceReservation_ReservationsId",
+                table: "DeviceReservation",
+                column: "ReservationsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_DeskId",
+                table: "Reservations",
+                column: "DeskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_UserId",
+                table: "Reservations",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
@@ -108,13 +195,19 @@ namespace DataBase.Migrations
                 name: "DeskDevice");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "DeviceReservation");
+
+            migrationBuilder.DropTable(
+                name: "Devices");
+
+            migrationBuilder.DropTable(
+                name: "Reservations");
 
             migrationBuilder.DropTable(
                 name: "Desks");
 
             migrationBuilder.DropTable(
-                name: "Devices");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Roles");

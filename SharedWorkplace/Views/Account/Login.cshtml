@@ -18,13 +18,15 @@
             <form asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
                 <div class="validation" asp-validation-summary="ModelOnly"></div>
                 <div>
-                    <label asp-for="Email">Введите Email</label>
-                    <div class="form-group UnderDiv">
+                    <label asp-for="Email">Введите Login</label>
+                    <div class="UnderDiv">
                         <input class="inputFields" type="text" asp-for="Email" />
                     </div>
-                    @Html.ValidationMessageFor(model => model.Email, null, new { @class = "WarningMessage" })
+                    <div>
+                        @Html.ValidationMessageFor(model => model.Email, null, new { @class = "WarningMessage" })
+                    </div>
                     <label asp-for="Password">Введите пароль</label>
-                    <div class="form-group UnderDiv">
+                    <div class="UnderDiv">
                         <input class="inputFields" asp-for="Password" />
                     </div>
                     @Html.ValidationMessageFor(model => model.Password, null, new { @class = "WarningMessage" })

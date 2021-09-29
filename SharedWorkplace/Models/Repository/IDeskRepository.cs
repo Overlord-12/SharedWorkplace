@@ -7,7 +7,7 @@ namespace SharedWorkplace.Models.Repository
 {
    public interface IDeskRepository
     {
-        Task<bool> CreateDesk(Desk table, int[] selectedItems);
+        Task<bool> CreateDesk(DeskViewModel table, int[] selectedItems);
         IEnumerable<Desk> GetAllDesk();
         void DeleteDesk(int id);
 

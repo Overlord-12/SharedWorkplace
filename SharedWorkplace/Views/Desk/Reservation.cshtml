@@ -1,0 +1,59 @@
+﻿@model ReservationViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<h4>Reservation</h4>
+<hr />
+<div class="row">
+    @if (ViewBag.Date.Count == 0)
+    {
+        <h1 style="text-align:center">Данный стол нельзя зарезирвировать</h1>
+    }
+    else
+    {
+        <div class="col-md-4">
+            <form asp-action="Reservation">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div>
+                    @foreach (var device in Model.Devices)
+                    {
+                        <div>
+                            <label asp-action asp-for="Devices" class="control-label">
+                                @device.DeviceName
+                                <input name="selectedItems" value="@device.Id" type="checkbox" />
+                            </label><br>
+                        </div>
+                    }
+                </div>
+                @if (ViewBag.Date.Count != 0)
+                {
+                    <div>
+
+                        <select asp-for="StartTime">
+                            @foreach (var item in ViewBag.Date)
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        </select>
+                    </div>
+                }
+                <div class="form-group">
+                    <input type="hidden" value="@ViewBag.Id" name="deskId" />
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    }
+
+</div>
+
+<div>
+    <a asp-action="UserDesk">Back to List</a>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

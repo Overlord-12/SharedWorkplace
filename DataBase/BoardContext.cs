@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataBase.Entities;
+using Microsoft.EntityFrameworkCore;
 using SharedWorkplace.Models;
 using System;
 
@@ -11,10 +12,11 @@ namespace DataBase
         public virtual DbSet<Device> Devices { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Reservation> Reservations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=NewDesk;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=TesDesk;Trusted_Connection=True;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
