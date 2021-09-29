@@ -8,7 +8,7 @@ namespace SharedWorkplace.Models.Repository
 {
     public interface IReservationRepository
     {
-        bool Create(Reservation reservation);
+        bool Create(ReservationViewModel reservation);
         IEnumerable<Reservation> GetAll();
     }
 }

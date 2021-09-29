@@ -8,7 +8,7 @@ namespace SharedWorkplace.Models.Repository
    public interface IDeviceRepository
     {
         IEnumerable<Device> GetAll();
-        Task<bool> CreateDevice(Device name);
+        Task<bool> CreateDevice(DeviceViewModel name);
         void DeleteDevice(int id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DataBase.Entities;
+using SharedWorkplace.Models;
 using SharedWorkplace.Models.Repository;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace SharedWorkplace.Service
             _reservationRepository = reservationRepository;
         }
 
-        public bool Create(Reservation reservation)
+        public bool Create(ReservationViewModel reservation)
         {
             return _reservationRepository.Create(reservation);
         }

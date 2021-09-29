@@ -1,4 +1,5 @@
 ﻿using DataBase.Entities;
+using SharedWorkplace.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace SharedWorkplace.Service
 {
     public interface IReservationService
     {
-        bool Create(Reservation reservation);
+        bool Create(ReservationViewModel reservation);
         IEnumerable<Reservation> GetAll();
     }
 }

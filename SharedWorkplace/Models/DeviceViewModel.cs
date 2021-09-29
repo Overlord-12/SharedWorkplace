@@ -9,9 +9,8 @@ namespace SharedWorkplace.Models
     public class DeviceViewModel
     {
         public int Id { get; set; }
-        [Remote(action: "CheckDesk", controller: "Desk", ErrorMessage = "Такой девайс уже используется")]
-        public string DeskName { get; set; }
-        public virtual ICollection<Desk> Desks { get; set; }
+        [Remote(action: "CheckDevice", controller: "Desk", ErrorMessage = "Такой девайс уже есть")]
+        public string DeviceName { get; set; }
 
     }
 }

@@ -21,7 +21,8 @@ namespace SharedWorkplace.Controllers
         private IUserService _userService;
         private IReservationService _reservationService;
 
-        public DeskController(IReservationService reservationService, IUserService userService, IDeskService deskService, IDeviceService deviceService, BoardContext boardContext)
+        public DeskController(IReservationService reservationService, IUserService userService, 
+            IDeskService deskService, IDeviceService deviceService, BoardContext boardContext)
         {
             _deskService = deskService;
             _deviceService = deviceService;
@@ -43,32 +44,33 @@ namespace SharedWorkplace.Controllers
         [Authorize(Roles = "user, admin")]
         public IActionResult Reservation(int id)
         {
-            List<string> dateTimes = new List<string>();
+            List<string> dateTimes = new();
             for (int i = 0; i < 7; i++)
             {
-                var date = DateTime.Now.AddDays(i);
+                var ts = DateTime.Now.AddDays(i).Date;
                 if (_reservationService.GetAll().FirstOrDefault(t => t.StartTime.Date == DateTime.Now.AddDays(i).Date &&
-                t.Desk.Id == id) == null)
+                t.Desk.Id == id) == null && _reservationService.GetAll().FirstOrDefault(t => t.User.Name == User.Identity.Name && t.StartTime ==
+                ts) == null)
                     dateTimes.Add(DateTime.Now.AddDays(i).ToString("d"));
             }
-            var reservation = new Reservation
+            var reservation = new ReservationViewModel
             {
                 Desk = _deskService.GetAllDesk().FirstOrDefault(t => t.Id == id),
                 Devices = _deskService.GetAllDesk().FirstOrDefault(t => t.Id == id).Devices
             };
             ViewBag.Date = dateTimes;
-            ViewBag.Id = reservation.Desk.Id;
+            ViewBag.Id = id;
             return View(reservation);
         }
         [Authorize(Roles = "user, admin")]
         [HttpPost]
-        public IActionResult Reservation(string time, int[] selectedItems, int deskId)
+        public IActionResult Reservation(ReservationViewModel reser, int[] selectedItems, int deskId)
         {
-            var Reservation = new Reservation
+            var Reservation = new ReservationViewModel
             {
                 Desk = _deskService.GetAllDesk().FirstOrDefault(t => t.Id == deskId),
                 Devices = _deviceService.GetAll().Where(x => selectedItems.Contains(x.Id)).ToList(),
-                StartTime = Convert.ToDateTime(time),
+                StartTime = Convert.ToDateTime(reser.StartTime),
                 User = _userService.GetAllUser().FirstOrDefault(t => t.Login == User.Identity.Name)
             };
             _reservationService.Create(Reservation);
@@ -86,18 +88,15 @@ namespace SharedWorkplace.Controllers
         [HttpPost]
         public IActionResult CreateDesk(DeskViewModel table, int[] selectedItems)
         {
-            var t = _deskService.GetAllDesk().FirstOrDefault(t => t.DeskName == table.DeskName);
-            if (_deskService.GetAllDesk().FirstOrDefault(t=>t.DeskName == table.DeskName)!= null)
-                ModelState.AddModelError("DeviceName", "Такой девайс уже существует");
             _deskService.CreateDesk(table, selectedItems);
             return RedirectToAction("UserDesk", "Desk"); ;
         }
         [HttpGet]
         [Authorize(Roles = "admin")]
-        public IActionResult CreateDevice(Device device,int id)
+        public IActionResult CreateDevice()
         {
             ViewBag.Devices = _deviceService.GetAll();
-            return View(device);
+            return View();
         }
         public IActionResult DeleteDevice(int id)
         {
@@ -106,23 +105,15 @@ namespace SharedWorkplace.Controllers
         }
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public IActionResult CreateDevice(Device dev)
+        public IActionResult CreateDevice(DeviceViewModel dev)
         {
-            try
-            {
                 _deviceService.CreateDevice(dev);
-                return RedirectToAction("CreateDevice", "Desk", new { dev = new Device() });
-            }
-            catch(Exception)
-            {
-                dev.DeviceName = "Такой стол уже существует";
-            }
-            return RedirectToAction("CreateDevice", "Desk", new { t = dev });
+            return RedirectToAction("CreateDevice", "Desk");
         }
         [AcceptVerbs("Get", "Post")]
-        public IActionResult CheckDevice(string device)
+        public IActionResult CheckDevice(string DeviceName)
         {
-            if (_deviceService.GetAll().FirstOrDefault(t=>t.DeviceName == device) != null)
+            if (_deviceService.GetAll().FirstOrDefault(t=>t.DeviceName == DeviceName) != null)
                 return Json(false);
             return Json(true);
         }
@@ -148,7 +139,7 @@ namespace SharedWorkplace.Controllers
         public IActionResult DelDeviceinDesk(int id, int id2)
         {
             _deskService.DeleteDevice(id, id2);
-            return RedirectToAction("EditDesk", "Desk", new { id = id });
+            return RedirectToAction("EditDesk", "Desk", new { id });
         }
 
         [Authorize(Roles = "admin")]
