@@ -14,9 +14,17 @@ namespace SharedWorkplace.Service
         {
             _deviceRepository = deviceRepository;
         }
-        public void CreateDevice(DeviceViewModel name)
+        public async Task<bool> CreateDevice(DeviceViewModel name)
         {
-            _deviceRepository.CreateDevice(name);
+            try
+            {
+                await _deviceRepository.CreateDevice(name);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
         public void DeleteService(int id)
         {
