@@ -11,34 +11,37 @@
 </head>
 <body>
     <h1 class="headText">Регистрация</h1>
-    <form asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
-        <div class="validation" asp-validation-summary="ModelOnly"></div>
-        <div class="mainDiv">
+    <div class="mainDiv">
+        <form asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
+            <div class="validation" asp-validation-summary="ModelOnly"></div>
             <div class="UnderDiv">
-                <label asp-for="Email">Введите Login</label><br />
+                <label asp-for="Email">Login</label><br />
                 <input class="inputFields" type="text" asp-for="Email" />
             </div>
             @Html.ValidationMessageFor(model => model.Email, null, new { @class = "WarningMessage" })
             <div class="UnderDiv">
-                <label asp-for="Name">Введите Имя</label><br />
+                <label asp-for="Name">First Name</label><br />
                 <input class="inputFields" type="text" asp-for="Name" />
             </div>
             @Html.ValidationMessageFor(model => model.Name, null, new { @class = "WarningMessage" })
             <div class="UnderDiv">
-                <label asp-for="Password">Введите пароль</label><br />
+                <label asp-for="Password">New password</label><br />
                 <input class="inputFields" asp-for="Password" />
             </div>
             @Html.ValidationMessageFor(model => model.Password, null, new { @class = "WarningMessage" })
             <div class="UnderDiv">
-                <label asp-for="ConfirmPassword">Повторите пароль</label><br />
+                <label asp-for="ConfirmPassword">Confirm Password</label><br />
                 <input class="inputFields" asp-for="ConfirmPassword" />
             </div>
             @Html.ValidationMessageFor(model => model.ConfirmPassword, null, new { @class = "WarningMessage" })
-            <div class="UnderDiv">
-                <input type="submit" class="regist" value="Зарегистрироваться" />
-                <a style="margin-left:40px" asp-action="Login" asp-controller="Account">Войти</a>
-            </div>
+        <div class="UnderDiv">
+            <input type="submit" class="regist" value="Registation" />
+            <a asp-action="Login" asp-controller="Account" >
+                <input type="button" class="regist" value="Log In" />
+            </a>
         </div>
-    </form>
+        </form>
+    </div>
+
 </body>
 </html> 

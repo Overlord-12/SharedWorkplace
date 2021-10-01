@@ -9,7 +9,7 @@ namespace SharedWorkplace.Models
     public class DeviceViewModel
     {
         public int Id { get; set; }
-        [Remote(action: "CheckDevice", controller: "Desk", ErrorMessage = "Такой девайс уже есть")]
+        [Remote(action: "CheckDevice", controller: "Desk", ErrorMessage = "Such a device already exists")]
         public string DeviceName { get; set; }
 
     }

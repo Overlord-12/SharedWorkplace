@@ -8,7 +8,7 @@ namespace SharedWorkplace.Models
 {
     public class DeskViewModel : Desk
     {
-        [Remote(action: "CheckDesk", controller: "Desk", ErrorMessage = "Такой стол уже используется")]
+        [Remote(action: "CheckDesk", controller: "Desk", ErrorMessage = "Such a table is already in use")]
         public string DeskName { get; set; }
     }
 }
