@@ -27,7 +27,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
+                @Html.DisplayFor(modelItem => item.StartTime.Day)/@Html.DisplayFor(modelItem => item.StartTime.Month)/@Html.DisplayFor(modelItem => item.StartTime.Year)
             </td>
             <td>
                 @foreach (var dev in item.Devices)
