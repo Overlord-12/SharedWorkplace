@@ -22,7 +22,7 @@ namespace SharedWorkplace.Controllers
         private IReservationService _reservationService;
 
         public DeskController(IReservationService reservationService, IUserService userService, 
-            IDeskService deskService, IDeviceService deviceService, BoardContext boardContext)
+            IDeskService deskService, IDeviceService deviceService)
         {
             _deskService = deskService;
             _deviceService = deviceService;
@@ -105,9 +105,9 @@ namespace SharedWorkplace.Controllers
         }
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public IActionResult CreateDevice(DeviceViewModel dev)
+        public async Task<IActionResult> CreateDevice(DeviceViewModel dev)
         {
-                _deviceService.CreateDevice(dev);
+               await _deviceService.CreateDevice(dev);
             return RedirectToAction("CreateDevice", "Desk");
         }
         [AcceptVerbs("Get", "Post")]

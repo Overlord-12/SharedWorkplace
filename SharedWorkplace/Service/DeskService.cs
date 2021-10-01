@@ -15,9 +15,18 @@ namespace SharedWorkplace.Service
         {
             _deskService = deskService;
         }
-        public async void CreateDesk(DeskViewModel table, int[] selectedItems)
+        public bool CreateDesk(DeskViewModel table, int[] selectedItems)
         {
-            await _deskService.CreateDesk(table,selectedItems);
+            try
+            {
+                 _deskService.CreateDesk(table, selectedItems);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
         }
         public Desk DeleteDevice(int desk, int id)
         {
