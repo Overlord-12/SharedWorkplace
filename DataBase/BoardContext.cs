@@ -13,11 +13,15 @@ namespace DataBase
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public BoardContext(DbContextOptions<BoardContext> options)
+           : base(options)
         {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=TesDesk;Trusted_Connection=True;");
+            Database.EnsureCreated();
         }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //        optionsBuilder.UseSqlServer();
+        //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Seed default roles

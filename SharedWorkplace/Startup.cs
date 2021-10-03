@@ -29,10 +29,11 @@ namespace SharedWorkplace
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddControllersWithViews();
             services.AddRazorPages()
             .AddRazorRuntimeCompilation();
-            services.AddDbContext<BoardContext>();
+            services.AddDbContext<BoardContext>(options=> options.UseSqlServer(connection));
             services.AddScoped<IUserRepository,UserRepository>();
             services.AddScoped<IDeskRepository, DeskRepository>();
             services.AddScoped<IDeviceRepository, DeviceRepository>();
